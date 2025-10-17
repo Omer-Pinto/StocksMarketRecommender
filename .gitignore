@@ -1,0 +1,10 @@
+# .gitignore
+*.egg-info/
+__pycache__/
+*.pyc
+.venv/
+venv/
+uv.lock
+*.env
+.env
+.idea/
