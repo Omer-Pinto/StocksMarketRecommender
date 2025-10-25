@@ -1,10 +1,21 @@
 [project]
-name = "my-agent-project"
+name = "stocks-market-recommender"
 version = "0.1.0"
+requires-python = ">=3.11"
 dependencies = [
+    "langgraph-infra",
     "langchain-community>=0.3.31",
     "langchain-mcp-adapters>=0.1.11",
     "langchain-openai>=0.3.35",
     "langgraph>=0.6.10",
     "mcp>=1.16.0",
+    "pandas",
 ]
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv.sources]
+stocks-market-recommender = { path = "." }
+langgraph-infra = { path = "/Users/omerpinto/code/home/LangGraphWrappers" }
