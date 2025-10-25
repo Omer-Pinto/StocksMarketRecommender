@@ -35,8 +35,6 @@ class GraphManager:
             if wrapper.name != "yahoo_finance_mcp"
             for tool in wrapper.tools
         ]
-        # for tool in self.other_tools:
-        #     print(f"{tool}: {tool.args}")
 
         self._create_models()
         self._create_nodes()
