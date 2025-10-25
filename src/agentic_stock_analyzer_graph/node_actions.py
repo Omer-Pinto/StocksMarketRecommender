@@ -11,7 +11,7 @@ from .state import State, Phase
 from .structured_outputs import QueryRequest, FinalQueryResult, McpQueryResult
 from market_analyst_graph.structured_outputs import AnalysisOutput
 
-MAX_INPUT_CHARS_PER_RESULT_IN_FINAL_DECISION = 500
+MAX_INPUT_CHARS_PER_RESULT_IN_FINAL_DECISION = 1500
 
 def _build_messages_for_market_research_manager(query_results: List[FinalQueryResult]) -> List[BaseMessage]:
     res = []
