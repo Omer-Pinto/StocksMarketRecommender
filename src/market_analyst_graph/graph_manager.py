@@ -21,6 +21,9 @@ class GraphManager:
         self.model_mapping = None
         self.graph_wrapper = None
     
+    def get_graph_drawing(self):
+        return self.graph_wrapper.get_graph_drawing()
+
     async def setup(self):
         self.tool_wrappers = await tools_setup()
         self.mcp_tools = [

@@ -9,12 +9,14 @@ load_dotenv(override=True)
 async def run_stocks_market_recommender(query_str:str) -> None:
     graph = MarketAnalystGraph()
     await graph.setup()
+    # graph.get_graph_drawing()
     result = await graph.run_graph(query=query_str)
     await graph.cleanup()
 
 async def run_agentic_stocks_analyzer(query_str: str, company: str) -> None:
     graph = AgenticStockAnalyzerGraph()
     await graph.setup()
+    # graph.get_graph_drawing()
     result = await graph.run_graph(query=query_str, company=company)
     await graph.cleanup()
 
