@@ -1,6 +1,7 @@
 from enum import Enum
 
 from graph import GraphWrapper, NodeWrapper, EdgeType
+from graph.nodes_wrappers import PythonNodeWrapper
 from langchain_core.messages import HumanMessage
 from langgraph.constants import START, END
 from models import ModelWrapper, Model
@@ -8,7 +9,7 @@ from models import ModelWrapper, Model
 from .state import State, Phase
 from .structured_outputs import InvestmentDecision, ManagerDecision
 from .tools_setup import tools_setup, tools_cleanup
-from .node_actions import market_research_manager, market_analyst_subgraph_executer, hedge_fund_manager
+from .node_actions import market_research_manager, market_analyst_subgraph_executer, hedge_fund_manager, file_writer
 from .routers import market_research_router
 from .utils import NodeName
 
@@ -47,8 +48,9 @@ class GraphManager:
         self.mcp_tools = None
         self.other_tools = None
 
-    async def run_graph(self, query: str) -> State:
+    async def run_graph(self, query: str, company: str) -> State:
         state = {
+            "company": company,
             "human_question": query,
             "messages": [HumanMessage(content=query)],
             "analysis_phase": Phase.QUERY,
@@ -64,34 +66,26 @@ class GraphManager:
             NodeWrapper(name=NodeName.MARKET_RESEARCH_MANAGER, action=market_research_manager,
                         model_wrapper=self.model_mapping.get(NodeName.MARKET_RESEARCH_MANAGER), router=market_research_router),
             # subgraph executer is executing a graph and not using a model, so its model_wrapper isn't in use.
-            NodeWrapper(name=NodeName.MARKET_ANALYST_SUBGRAPH_EXECUTER, action=market_analyst_subgraph_executer,
-                        model_wrapper=self.model_mapping.get(NodeName.MARKET_RESEARCH_MANAGER)),
+            PythonNodeWrapper(name=NodeName.MARKET_ANALYST_SUBGRAPH_EXECUTER, action=market_analyst_subgraph_executer),
 
             NodeWrapper(name=NodeName.HEDGE_FUND_MANAGER, action=hedge_fund_manager,
                         model_wrapper=self.model_mapping.get(NodeName.HEDGE_FUND_MANAGER)),
-            # NodeWrapper(name=NodeName.REPORT_WRITER_AND_NOTIFIER, action=report_file_writer,
-            #             model_wrapper=self.model_mapping.get(NodeName.REPORT_WRITER_AND_NOTIFIER)),
-            # ToolNodeWrapper(name=NodeName.REPORT_WRITER_AND_NOTIFIER_TOOLS, tools=self.other_tools),
+            PythonNodeWrapper(name=NodeName.REPORT_WRITER, action=file_writer),
         ]
 
     def _create_edges(self):
         self.edges_info = [
             (START, EdgeType.EDGE, [NodeName.MARKET_RESEARCH_MANAGER]),
-
             (NodeName.MARKET_RESEARCH_MANAGER, EdgeType.CONDITIONAL_EDGE, [NodeName.MARKET_ANALYST_SUBGRAPH_EXECUTER, NodeName.HEDGE_FUND_MANAGER]),
             (NodeName.MARKET_ANALYST_SUBGRAPH_EXECUTER, EdgeType.EDGE, [NodeName.MARKET_RESEARCH_MANAGER]),
-
-            (NodeName.HEDGE_FUND_MANAGER, EdgeType.EDGE, [END]),
-            # (NodeName.HEDGE_FUND_MANAGER, EdgeType.EDGE, [NodeName.REPORT_WRITER_AND_NOTIFIER]),
-            # (NodeName.REPORT_WRITER_AND_NOTIFIER, EdgeType.CONDITIONAL_EDGE, [NodeName.REPORT_WRITER_AND_NOTIFIER_TOOLS, END]),
-            # (NodeName.REPORT_WRITER_AND_NOTIFIER_TOOLS, EdgeType.EDGE, [END]),
+            (NodeName.HEDGE_FUND_MANAGER, EdgeType.EDGE, [NodeName.REPORT_WRITER]),
+            (NodeName.REPORT_WRITER, EdgeType.EDGE, [END]),
         ]
 
     def _create_models(self):
         models_lists = [
-            ModelWrapper(model=Model.GPT_4O_MINI, name=NodeName.MARKET_RESEARCH_MANAGER, schema=ManagerDecision),
-            ModelWrapper(model=Model.GPT_4O, name=NodeName.HEDGE_FUND_MANAGER, schema=InvestmentDecision),
-            # ModelWrapper(model=Model.GPT_4O_MINI, name=NodeName.REPORT_WRITER_AND_NOTIFIER, tools=self.other_tools),
+            ModelWrapper(model=Model.GPT_4O, name=NodeName.MARKET_RESEARCH_MANAGER, schema=ManagerDecision, temperature=1.0),
+            ModelWrapper(model=Model.GPT_4O, name=NodeName.HEDGE_FUND_MANAGER, schema=InvestmentDecision, temperature=1.0),
         ]
         self.model_mapping = {model.name: model for model in models_lists}
 

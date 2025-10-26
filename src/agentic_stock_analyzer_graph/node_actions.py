@@ -1,5 +1,8 @@
 import asyncio
 import json
+import os
+from datetime import datetime
+
 from langchain_core.messages import AIMessage, SystemMessage, BaseMessage, HumanMessage
 from typing import Any, Dict, List, Optional
 
@@ -98,12 +101,10 @@ def _flatten_queries_and_results(results: List[FinalQueryResult]) -> str:
 
     return "\n".join(res)
 
-
 async def hedge_fund_manager(state: State) -> Dict[str, Any]:
     system_message = hedge_fund_manager_system_message
     analyst_query_results = state["analyst_query_results"]
     decision_query_text = _flatten_queries_and_results(analyst_query_results)
-    print(f"******decision={decision_query_text}******")
     user_message = HumanMessage(content="Please perform your investment analysis on the following data retrieved for you and return the required answer:\n" +
                     decision_query_text)
 
@@ -111,7 +112,8 @@ async def hedge_fund_manager(state: State) -> Dict[str, Any]:
     # Invoke the func-injected LLM
     response = await hedge_fund_manager.__model__.ainvoke(hedge_fund_manager_messages)
     return {
-        "messages": [AIMessage(content=response.model_dump_json())]
+        "messages": [ControlMessage(content="hedge fund manager made an investment decision successfully")],
+        "investment_decision": response
     }
 
 async def market_analyst_subgraph_executer(state: State) -> Dict[str, Any]:
@@ -125,4 +127,22 @@ async def market_analyst_subgraph_executer(state: State) -> Dict[str, Any]:
     return {
         "messages": [ControlMessage(content="queries executed successfully by subgraph executer")],
         "analyst_query_results": [query_results],
+    }
+
+async def file_writer(state: State) -> Dict[str, Any]:
+    company = state["company"]
+    now_str = datetime.now().strftime("%Y_%m_%d-%H_%M_%S")
+    dir_name = f"{company}_{now_str}"
+    full_dir_path = f"../outputs/{dir_name}"
+    os.makedirs(full_dir_path, exist_ok=True)
+
+    with open(f"{full_dir_path}/user_query.txt", "w", encoding="utf-8") as f:
+        json.dump(state["human_question"], f, indent=2, ensure_ascii=False)
+    with open(f"{full_dir_path}/work_report.json", "w", encoding="utf-8") as f:
+        json.dump([r.model_dump() for r in state["analyst_query_results"]], f, indent=2, ensure_ascii=False)
+    with open(f"{full_dir_path}/investment_decision.json", "w", encoding="utf-8") as f:
+        json.dump(state["investment_decision"].model_dump(), f, indent=2, ensure_ascii=False)
+
+    return {
+        "messages": [ControlMessage(content=f"directory {full_dir_path} with 3 files were written successfully")]
     }

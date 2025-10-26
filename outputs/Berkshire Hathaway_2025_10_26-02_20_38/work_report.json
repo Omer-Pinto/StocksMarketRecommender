@@ -1,0 +1,50 @@
+[
+  {
+    "mcp_query_results": [
+      {
+        "query": {
+          "query": "What is the recent price history for the last 3 months for Berkshire Hathaway (BRK.A)?",
+          "rationale": "Understanding the stock's recent price performance helps identify trends and potential price movements."
+        },
+        "result": {
+          "input_question": "Please summarize the historical stock prices for BRK-A over the last 3 months.",
+          "technical_report": "The historical stock prices for BRK-A over the last 3 months indicate varied performance with the stock price fluctuating as follows: Opening prices ranged from 702,758 to 725,802. The highest price observed was 730,198 and the lowest was 685,150. The closing prices showed a general trend around the 700,000 mark, with the closing price on the last day reported at 718,052. Overall, the trading volume varied throughout the period, with some days recording higher volumes, including up to 900 shares traded on certain days. No dividends or stock splits were reported during this timeframe.",
+          "explanation": "The detailed data reveals that BRK-A has been trading within a relatively stable range with its prices fluctuating slightly. The highest close was near 730,198, indicating some upward spike, while the lowest was around 685,150. These details can help inform investment decisions by highlighting periods of high and low activity, as well as price trends over the past three months.",
+          "calls": [
+            {
+              "function_name": "get_historical_stock_prices",
+              "args": {
+                "ticker": "BRK-A",
+                "period": "3mo"
+              },
+              "result": "[{\"Date\":\"2025-07-25T04:00:00.000Z\",\"Open\":723178.0,\"High\":727796.0,\"Low\":720500.0,\"Close\":726220.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-07-28T04:00:00.000Z\",\"Open\":725802.0,\"High\":730198.0,\"Low\":721655.0,\"Close\":722200.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-07-29T04:00:00.000Z\",\"Open\":722345.0,\"High\":727376.0,\"Low\":713705.0,\"Close\":713705.0,\"Volume\":600,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-07-30T04:00:00.000Z\",\"Open\":713928.0,\"High\":717903.0,\"Low\":710532.0,\"Close\":714175.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-07-31T04:00:00.000Z\",\"Open\":709525.0,\"High\":720000.0,\"Low\":707872.0,\"Close\":719850.0,\"Volume\":700,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-01T04:00:00.000Z\",\"Open\":712231.0,\"High\":715191.0,\"Low\":707490.0,\"Close\":711480.0,\"Volume\":400,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-04T04:00:00.000Z\",\"Open\":702758.0,\"High\":703419.0,\"Low\":685150.0,\"Close\":692600.0,\"Volume\":900,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-05T04:00:00.000Z\",\"Open\":693257.0,\"High\":702375.0,\"Low\":691120.0,\"Close\":694750.0,\"Volume\":600,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-06T04:00:00.000Z\",\"Open\":696051.0,\"High\":704260.0,\"Low\":695129.0,\"Close\":703115.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-07T04:00:00.000Z\",\"Open\":703476.0,\"High\":708739.0,\"Low\":693057.0,\"Close\":700000.0,\"Volume\":500,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-08T04:00:00.000Z\",\"Open\":695837.0,\"High\":699941.0,\"Low\":693021.0,\"Close\":698040.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-11T04:00:00.000Z\",\"Open\":699742.0,\"High\":702190.0,\"Low\":695680.0,\"Close\":698440.0,\"Volume\":500,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-12T04:00:00.000Z\",\"Open\":697051.0,\"High\":708300.0,\"Low\":697051.0,\"Close\":704700.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-13T04:00:00.000Z\",\"Open\":707526.0,\"High\":719339.0,\"Low\":706703.0,\"Close\":715490.0,\"Volume\":400,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-14T04:00:00.000Z\",\"Open\":718026.0,\"High\":718680.0,\"Low\":712115.0,\"Close\":718680.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-15T04:00:00.000Z\",\"Open\":723080.0,\"High\":724040.0,\"Low\":714246.0,\"Close\":717250.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0},{\"Date\":\"2025-08-18T04:00:00.000Z\",\"Open\":717427.0,\"High\":718235.0,\"Low\":712283.0,\"Close\":718052.0,\"Volume\":300,\"Dividends\":0.0,\"Stock Splits\":0.0}]",
+              "error": null
+            }
+          ]
+        }
+      },
+      {
+        "query": {
+          "query": "What is the current analyst coverage and their recommendations for Berkshire Hathaway?",
+          "rationale": "Analyst coverage offers insights into market consensus and sentiment regarding the stock."
+        },
+        "result": {
+          "input_question": "What are the current stock recommendations for BRK-B?",
+          "technical_report": "The analysis of stock recommendations for BRK-B over the last three months indicates a consistent outlook with no strong buys or sells. The recommendations include 2 buys and 2 holds for each of the last three months.",
+          "explanation": "The recommendations for the stock BRK-B have remained stable over the last three months, with analysts suggesting to buy or hold the stock but not to sell. This indicates a moderate confidence in the stock's ongoing performance.",
+          "calls": [
+            {
+              "function_name": "get_recommendations",
+              "args": {
+                "ticker": "BRK-B",
+                "recommendation_type": "recommendations"
+              },
+              "result": "[{\"period\":\"0m\",\"strongBuy\":0,\"buy\":2,\"hold\":2,\"sell\":0,\"strongSell\":0},{\"period\":\"-1m\",\"strongBuy\":0,\"buy\":2,\"hold\":2,\"sell\":0,\"strongSell\":0},{\"period\":\"-2m\",\"strongBuy\":0,\"buy\":2,\"hold\":2,\"sell\":0,\"strongSell\":0}]",
+              "error": null
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

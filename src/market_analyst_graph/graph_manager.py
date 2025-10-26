@@ -79,8 +79,8 @@ class GraphManager:
 
     def _create_models(self):
         models_lists = [
-            ModelWrapper(model=Model.GPT_4O_MINI, name=NodeName.MARKET_ANALYST, tools=self.mcp_tools),
-            ModelWrapper(model=Model.GPT_4O_MINI, name=NodeName.MCP_CALLS_SUMMARIZER, schema=AnalysisOutput),
+            ModelWrapper(model=Model.GPT_4O, name=NodeName.MARKET_ANALYST, tools=self.mcp_tools, temperature=1.0),
+            ModelWrapper(model=Model.GPT_4O_MINI, name=NodeName.MCP_CALLS_SUMMARIZER, schema=AnalysisOutput, temperature=1.0),
         ]
         self.model_mapping = {model.name: model for model in models_lists}
 

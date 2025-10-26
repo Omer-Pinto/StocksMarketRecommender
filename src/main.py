@@ -12,15 +12,16 @@ async def run_stocks_market_recommender(query_str:str) -> None:
     result = await graph.run_graph(query=query_str)
     await graph.cleanup()
 
-async def run_agentic_stocks_analyzer(query_str: str) -> None:
+async def run_agentic_stocks_analyzer(query_str: str, company: str) -> None:
     graph = AgenticStockAnalyzerGraph()
     await graph.setup()
-    result = await graph.run_graph(query=query_str)
+    result = await graph.run_graph(query=query_str, company=company)
     await graph.cleanup()
 
 if __name__ == "__main__":
-    query = f"Should I invest in Nvidia? Today is {datetime.today().strftime('%m/%d/%Y')}"
-    asyncio.run(run_agentic_stocks_analyzer(query_str=query))
+    company = "Berkshire Hathaway"
+    query = f"Should I invest in {company}? Today is {datetime.today().strftime('%m/%d/%Y')}"
+    asyncio.run(run_agentic_stocks_analyzer(query_str=query, company=company))
 
     # query1 = f"Create a comprehensive analysis of Microsoft's financial health using their latest quarterly financial statements."
     # query2 = "Get historical price data for Microsoft (MSFT) over the past year."

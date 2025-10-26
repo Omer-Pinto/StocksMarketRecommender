@@ -42,7 +42,6 @@ async def market_analyst(state: State) -> Dict[str, Any]:
         "mcp_tools_used": mcp_tools_usages,
     }
 
-
 def _get_tool_call_pairs(messages: List[BaseMessage])->Tuple[HumanMessage, AIMessage, List[ToolMessage]]:
     assert len(messages) > 2, f"summarizer called with only {len(messages)} messages"
     assert isinstance(messages[0], HumanMessage), f"summarized called with messages of unknown format - 1st message must be HumanMessage, got {type(messages[0])}"
@@ -59,11 +58,7 @@ def _get_tool_call_pairs(messages: List[BaseMessage])->Tuple[HumanMessage, AIMes
         res.append(_clamp_for_llm(messages[i]))
     return human_message, mcp_tool_call_message, res
 
-
 async def mcp_calls_summarizer(state: State) -> Dict[str, Any]:
-    print("####mcp_calls_summarizer####")
-    print("total number of messages:", len(state["messages"]))
-
     system_message = mcp_calls_summarizer_message
     human_message, mcp_tool_call_message, mcp_tool_result_messages = _get_tool_call_pairs(state["messages"])
 

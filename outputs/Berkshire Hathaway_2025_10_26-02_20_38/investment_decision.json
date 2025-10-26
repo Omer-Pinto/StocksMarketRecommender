@@ -1,0 +1,7 @@
+{
+  "score": 0.2,
+  "rationale": "The historical price data for BRK-A over the last three months shows a relatively stable trading range with some fluctuations but no major upward or downward trends. The highest price was 730,198, the lowest was 685,150, and the recent closing price was 718,052, suggesting no strong deviation in either direction. Additionally, the trading volume has varied, indicating some periods of increased activity but without consistent directional pressure. Analyst coverage for the stock BRK-B, a more accessible proxy for BRK-A sentiment, reveals stable recommendations with no strong buy or sell signals and a moderate leaning towards holding or buying the stock. This lack of strong buy or sell cues from analysts further supports a cautious slightly positive outlook, largely influenced by the historically stable price and moderate buy recommendations.",
+  "summary": "The investment outlook for Berkshire Hathaway is slightly positive due to stable historical prices and moderate buy recommendations from analysts.",
+  "confidence": 0.7,
+  "risks": "Market volatility, macroeconomic changes, or unexpected shifts in Berkshire Hathaway's fundamental performance could alter the investment outlook."
+}
