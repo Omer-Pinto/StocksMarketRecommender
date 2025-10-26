@@ -4,6 +4,7 @@ from pathlib import Path
 from langchain_core.messages import AIMessage, SystemMessage, ToolCall, ToolMessage, BaseMessage, HumanMessage
 from typing import Any, Dict, List, Tuple, cast
 
+from messages import ControlMessage
 from pydantic import BaseModel
 
 from market_analyst_graph.prompts import market_analyst_system_message, mcp_calls_summarizer_message
@@ -26,21 +27,28 @@ async def market_analyst(state: State) -> Dict[str, Any]:
     system_message = market_analyst_system_message
 
     user_message = state["messages"][-1]
+    if isinstance(user_message, HumanMessage):
+        analyst_messages = [
+            SystemMessage(content=system_message),
+            user_message,
+        ]
 
-    analyst_messages = [
-        SystemMessage(content=system_message),
-        user_message,
-    ]
+        # Invoke the func-injected LLM
+        response = await market_analyst.__model__.ainvoke(analyst_messages)
+        mcp_tools_usages = [tool_call for tool_call in response.tool_calls] if hasattr(response,
+                                                                                       "tool_calls") and response.tool_calls else []
 
-    # Invoke the func-injected LLM
-    response = await market_analyst.__model__.ainvoke(analyst_messages)
-    mcp_tools_usages = [tool_call for tool_call in response.tool_calls] if hasattr(response, "tool_calls") and response.tool_calls else []
+        # Return updated state
+        return {
+            "messages": [response],
+            "mcp_tools_used": mcp_tools_usages,
+        }
+    else:
+        return {
+            "messages": [ControlMessage(content="finished query mcp. return result")],
+        }
 
-    # Return updated state
-    return {
-        "messages": [response],
-        "mcp_tools_used": mcp_tools_usages,
-    }
+
 
 def _get_tool_call_pairs(messages: List[BaseMessage])->Tuple[HumanMessage, AIMessage, List[ToolMessage]]:
     assert len(messages) > 2, f"summarizer called with only {len(messages)} messages"
@@ -51,7 +59,7 @@ def _get_tool_call_pairs(messages: List[BaseMessage])->Tuple[HumanMessage, AIMes
     expected_num_of_tool_calls = 0 if not hasattr(mcp_tool_call_message, "additional_kwargs") or "tool_calls" not in mcp_tool_call_message.additional_kwargs  \
         else len(mcp_tool_call_message.additional_kwargs["tool_calls"])
     assert expected_num_of_tool_calls > 0, f"expected number of tool calls is {expected_num_of_tool_calls}"
-    assert len(messages) == 2 + expected_num_of_tool_calls, "total number of messages should be 2(human + ai) + num of tool calls"
+    assert len(messages) == 2 + expected_num_of_tool_calls + 1, "total number of messages should be 2(human + ai) + num of tool calls + 1 (the move to summarizer)"
     res = []
     for i in range(2, 2 + expected_num_of_tool_calls):
         assert isinstance(messages[i], ToolMessage), f"summarized called with messages of unknown format - expected {i}th message to be ToolMessage"

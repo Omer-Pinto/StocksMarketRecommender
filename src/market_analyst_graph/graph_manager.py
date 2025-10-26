@@ -76,7 +76,7 @@ class GraphManager:
         self.edges_info = [
             (START, EdgeType.EDGE, [NodeName.MARKET_ANALYST]),
             (NodeName.MARKET_ANALYST, EdgeType.CONDITIONAL_EDGE, [NodeName.MARKET_ANALYST_TOOLS, NodeName.MCP_CALLS_SUMMARIZER]),
-            (NodeName.MARKET_ANALYST_TOOLS, EdgeType.EDGE, [NodeName.MCP_CALLS_SUMMARIZER]),
+            (NodeName.MARKET_ANALYST_TOOLS, EdgeType.EDGE, [NodeName.MARKET_ANALYST]),
             (NodeName.MCP_CALLS_SUMMARIZER, EdgeType.EDGE, [END]),
         ]
 
