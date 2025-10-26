@@ -18,4 +18,6 @@ where = ["src"]
 
 [tool.uv.sources]
 stocks-market-recommender = { path = "." }
-langgraph-infra = { path = "/Users/omerpinto/code/home/LangGraphWrappers" }
+# for local use
+#langgraph-infra = { path = "../LangGraphWrappers" }
+langgraph-infra = { git = "https://github.com/Omer-Pinto/LangGraphWrappers", rev = "main" }
